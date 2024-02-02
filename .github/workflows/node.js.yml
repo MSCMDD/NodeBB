@@ -38,10 +38,12 @@ jobs:
       - run: cp install/package.json package.json
       - name: Install Dependencies
         run: npm install
+      - name: ZIP
+        run: tar -czvf node_modules.tar.gz  node_modules
       - name: node_modules
         uses: actions/upload-artifact@v3
         if: success() || failure() 
         with:
-          name: plugins
-          path: node_modules
+          name: node_modules
+          path: node_modules.tar.gz
           if-no-files-found: error
