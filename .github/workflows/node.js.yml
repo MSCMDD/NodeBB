@@ -9,6 +9,14 @@ on:
   pull_request:
     branches: [ "master" ]
 
+
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  contents: read
+
 jobs:
   build:
 
@@ -16,15 +24,13 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [18, 20]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+    - name: Install Node
+      uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+        node-version: ${{ matrix.node }}
     - run: ./npm install
     - run: ./nodebb build
