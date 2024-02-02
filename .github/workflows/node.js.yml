@@ -18,19 +18,24 @@ permissions:
   contents: read
 
 jobs:
-  build:
-
+  Tests:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18, 20]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
+    permissions:
+      contents: write
     steps:
-    - name: Install Node
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node }}
-    - run: /home/runner/work/NodeBB/NodeBB/nodebb
-    - run: /home/runner/work/NodeBB/NodeBB/nodebb build
+      - uses: actions/checkout@v2
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20"
+      - name: Cache NPM dependencies
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-npm-cache
+          restore-keys: |
+            ${{ runner.OS }}-npm-cache
+      - name: Install Dependencies
+        run: npm install
+      - name: Build
+        run: npm run deploy
